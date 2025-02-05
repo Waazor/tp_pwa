@@ -31,7 +31,7 @@ const count = ref(0)
       >Vue Docs Scaling up Guide</a
     >.
   </p>
-  <p class="read-the-docs">Click and Vue logos to learn more</p>
+  <p class="read-the-docs">Click here and Vue logos to learn more</p>
 </template>
 
 <style scoped>
