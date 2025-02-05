@@ -13,7 +13,7 @@ import MyCamera from './components/MyCamera.vue';
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
   </div>
-  <HelloWorld msg="Vite + Vue" />
+  <HelloWorld msg="Vit + Vue" />
   <MyCamera />
   <MyLocation></MyLocation>
   <link rel="manifest" href="/manifest.json">
