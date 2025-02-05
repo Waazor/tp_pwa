@@ -52,11 +52,13 @@ export default defineComponent({
 
     const vibratePhone = () => {
       if ('vibrate' in navigator) {
-        navigator.vibrate([200, 100, 200]); // Vibration avec un pattern
+        navigator.vibrate(200); // Simple vibration de 200ms
+        console.log("Vibration déclenchée");
       } else {
         console.warn('Vibration non supportée sur cet appareil.');
       }
     };
+
 
     const showNotification = (message: string) => {
       if (!('Notification' in window)) {
@@ -76,6 +78,7 @@ export default defineComponent({
         });
       }
     };
+
 
     return { photo, video, takePhotoAndNotify };
   },
