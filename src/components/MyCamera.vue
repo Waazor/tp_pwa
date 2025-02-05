@@ -22,8 +22,16 @@ export default defineComponent({
         canvas.getContext('2d')?.drawImage(video.value, 0, 0);
         photo.value = canvas.toDataURL('image/png');
         showNotification('Photo taken!');
+        vibratePhone();
       }
     };
+
+    const vibratePhone = () => {
+      if ('vibrate' in navigator) {
+        navigator.vibrate(200); // Vibrate for 200 milliseconds
+      }
+    };
+
 
     const showNotification = (message: string) => {
       if (Notification.permission === 'granted') {
