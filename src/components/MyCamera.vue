@@ -32,7 +32,7 @@ export default defineComponent({
     const vibratePhone = () => {
       if ('vibrate' in navigator) {
         console.log("📳 Vibration déclenchée...");
-        navigator.vibrate([200, 100, 200]);
+        navigator.vibrate([200]);
       }
     };
 

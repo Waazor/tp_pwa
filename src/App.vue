@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <h1>PWA de Victor WILLOTEAUX</h1>
+    <h1>PWA de Victor Notif and cam</h1>
     <img src="./assets/insta.png" alt="Photo de Victor" class="profile-image" />
   </div>
 
