@@ -18,10 +18,10 @@ jobs:
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_PASSWORD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /var/www/vuejs
-            git pull origin master  # Remplace par "main" si nécessaire
+            cd /var/www/tp_pwa
+            git pull origin main
             npm install
             npm run build
-            sudo systemctl restart nginx  # Redémarrer Nginx si nécessaire
+            sudo systemctl restart nginx
