@@ -21,6 +21,29 @@ export default defineComponent({
     const photo = ref<string | null>(null);
     const video = ref<HTMLVideoElement | null>(null);
 
+    // 🎵 Patterns de vibration
+    const patterns = [
+      2000, // Vibration unique de 2 secondes
+      [2000, 1000, 2000, 1000, 2000, 1000, 2000], // Vibration répétée
+      [400, 200, 400, 200, 400, 200, 800, 200, 800, 200, 400, 200, 400, 200, 200, 200], // "Twinkle, Twinkle, Little Star"
+      [150, 50, 150, 50, 300, 100, 150, 50, 150, 50, 300, 100, 150, 50, 150, 50], // "Super Mario Bros"
+      [300, 200, 300, 200, 300, 400, 300, 200, 300, 200, 300, 400, 300, 200, 600, 200] // "Jingle Bells"
+    ];
+
+    // 📳 Fonction de vibration
+    const vibratePhone = (patternIndex: number = 0) => {
+      if (!navigator.vibrate) {
+        console.warn("Vibration API non supportée.");
+        return;
+      }
+      if (patternIndex >= 0 && patternIndex < patterns.length) {
+        navigator.vibrate(patterns[patternIndex]);
+      } else {
+        console.warn("Index de vibration invalide:", patternIndex);
+      }
+    };
+
+    // 📸 Prendre une photo et envoyer une notification
     const takePhotoAndNotify = () => {
       const canvas = document.createElement('canvas');
       if (video.value) {
@@ -30,44 +53,35 @@ export default defineComponent({
         if (context) {
           context.drawImage(video.value, 0, 0);
           photo.value = canvas.toDataURL('image/png');
-          showNotification('Photo taken!');
-          vibratePhone();
+
+          // ✅ Notification et vibration après la photo
+          showNotification('📷 Photo prise avec succès !');
+          vibratePhone(0); // Vibration simple
         }
       }
     };
 
-    const patterns = [
-      2000, // Vibration unique de 2 secondes
-      [2000, 1000, 2000, 1000, 2000, 1000, 2000], // Vibration répétée
-      [400, 200, 400, 200, 400, 200, 800, 200, 800, 200, 400, 200, 400, 200, 200, 200], // "Twinkle, Twinkle, Little Star"
-      [150, 50, 150, 50, 300, 100, 150, 50, 150, 50, 300, 100, 150, 50, 150, 50], // "Super Mario Bros"
-      [300, 200, 300, 200, 300, 400, 300, 200, 300, 200, 300, 400, 300, 200, 600, 200] // "Jingle Bells"
-    ];
-
-    const vibratePhone = (patternIndex: number) => {
-      if ("vibrate" in navigator) {
-        console.log("Vibration support detected!");
-        navigator.vibrate(patterns[patternIndex]);
-      } else {
-        console.warn("Vibration API not supported on this device.");
-      }
-    };
-
-
+    // 🔔 Gestion des notifications
     const showNotification = (message: string) => {
-      console.log("Checking notification permission:", Notification.permission);
-      if (Notification.permission === 'granted') {
+      if (!("Notification" in window)) {
+        console.warn("Les notifications ne sont pas supportées sur ce navigateur.");
+        return;
+      }
+
+      if (Notification.permission === "granted") {
         new Notification(message);
-      } else if (Notification.permission !== 'denied') {
+      } else if (Notification.permission !== "denied") {
         Notification.requestPermission().then((permission) => {
-          console.log("Notification permission result:", permission);
-          if (permission === 'granted') {
+          if (permission === "granted") {
             new Notification(message);
+          } else {
+            console.warn("Permission de notification refusée.");
           }
         });
       }
     };
 
+    // 🎥 Activer la caméra au montage
     onMounted(() => {
       navigator.mediaDevices
         .getUserMedia({ video: true })
@@ -77,11 +91,11 @@ export default defineComponent({
           }
         })
         .catch((error) => {
-          console.error('Error accessing camera:', error);
+          console.error('Erreur d’accès à la caméra:', error);
         });
     });
 
-    return { photo, video, takePhotoAndNotify };
+    return { photo, video, takePhotoAndNotify, vibratePhone };
   },
 });
 </script>
