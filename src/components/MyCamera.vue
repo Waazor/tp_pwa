@@ -1,8 +1,8 @@
 <template>
   <div>
     <video ref="video" class="mirrored" autoplay></video>
-    <button @click="takePhotoAndNotify">Take Photo</button>
-    <img :src="photo" v-if="photo" alt="Photo"/>
+    <button @click="takePhotoAndNotify">📸 Prendre une photo</button>
+    <img :src="photo" v-if="photo" alt="Photo" />
   </div>
 </template>
 
@@ -23,7 +23,7 @@ export default defineComponent({
         if (context) {
           context.drawImage(video.value, 0, 0);
           photo.value = canvas.toDataURL('image/png');
-          showNotification('Photo taken!');
+          showNotification('📸 Photo capturée !');
           vibratePhone();
         }
       }
@@ -31,7 +31,8 @@ export default defineComponent({
 
     const vibratePhone = () => {
       if ('vibrate' in navigator) {
-        navigator.vibrate(200);
+        console.log("📳 Vibration déclenchée...");
+        navigator.vibrate([200, 100, 200]);
       }
     };
 
@@ -56,7 +57,7 @@ export default defineComponent({
           }
         })
         .catch((error) => {
-          console.error('Error accessing camera:', error);
+          console.error('❌ Erreur lors de l’accès à la caméra :', error);
         });
     });
 
