@@ -3,6 +3,13 @@
     <video ref="video" class="mirrored" autoplay></video>
     <button @click="takePhotoAndNotify">Take Photo</button>
     <img :src="photo" v-if="photo" alt="Photo"/>
+
+    <h3>Vibration Patterns</h3>
+    <button @click="vibratePhone(0)">Vibration simple</button>
+    <button @click="vibratePhone(1)">Vibration répétée</button>
+    <button @click="vibratePhone(2)">Twinkle Twinkle</button>
+    <button @click="vibratePhone(3)">Super Mario</button>
+    <button @click="vibratePhone(4)">Jingle Bells</button>
   </div>
 </template>
 
@@ -29,14 +36,23 @@ export default defineComponent({
       }
     };
 
-    const vibratePhone = () => {
-      if ('vibrate' in navigator) {
+    const patterns = [
+      2000, // Vibration unique de 2 secondes
+      [2000, 1000, 2000, 1000, 2000, 1000, 2000], // Vibration répétée
+      [400, 200, 400, 200, 400, 200, 800, 200, 800, 200, 400, 200, 400, 200, 200, 200], // "Twinkle, Twinkle, Little Star"
+      [150, 50, 150, 50, 300, 100, 150, 50, 150, 50, 300, 100, 150, 50, 150, 50], // "Super Mario Bros"
+      [300, 200, 300, 200, 300, 400, 300, 200, 300, 200, 300, 400, 300, 200, 600, 200] // "Jingle Bells"
+    ];
+
+    const vibratePhone = (patternIndex: number) => {
+      if ("vibrate" in navigator) {
         console.log("Vibration support detected!");
-        navigator.vibrate(200);
+        navigator.vibrate(patterns[patternIndex]);
       } else {
-        console.log("Vibration API not supported.");
+        console.warn("Vibration API not supported on this device.");
       }
     };
+
 
     const showNotification = (message: string) => {
       console.log("Checking notification permission:", Notification.permission);
