@@ -1,8 +1,8 @@
 <template>
   <div>
     <video ref="video" class="mirrored" autoplay></video>
-    <button @click="takePhotoAndNotify">📸 Prendre une photo</button>
-    <img :src="photo" v-if="photo" alt="Photo" />
+    <button @click="takePhotoAndNotify">Take Photo</button>
+    <img :src="photo" v-if="photo" alt="Photo"/>
   </div>
 </template>
 
@@ -23,7 +23,7 @@ export default defineComponent({
         if (context) {
           context.drawImage(video.value, 0, 0);
           photo.value = canvas.toDataURL('image/png');
-          showNotification('📸 Photo capturée !');
+          showNotification('Photo taken!');
           vibratePhone();
         }
       }
@@ -31,16 +31,20 @@ export default defineComponent({
 
     const vibratePhone = () => {
       if ('vibrate' in navigator) {
-        console.log("📳 Vibration déclenchée...");
-        navigator.vibrate([200]);
+        console.log("Vibration support detected!");
+        navigator.vibrate(200);
+      } else {
+        console.log("Vibration API not supported.");
       }
     };
 
     const showNotification = (message: string) => {
+      console.log("Checking notification permission:", Notification.permission);
       if (Notification.permission === 'granted') {
         new Notification(message);
       } else if (Notification.permission !== 'denied') {
         Notification.requestPermission().then((permission) => {
+          console.log("Notification permission result:", permission);
           if (permission === 'granted') {
             new Notification(message);
           }
@@ -57,7 +61,7 @@ export default defineComponent({
           }
         })
         .catch((error) => {
-          console.error('❌ Erreur lors de l’accès à la caméra :', error);
+          console.error('Error accessing camera:', error);
         });
     });
 
