@@ -50,13 +50,13 @@ h1 {
   margin-bottom: 10px;
 }
 
-/* Style de l'image de profil */
+
 .profile-image {
-  width: 100px; /* Taille de l'image */
+  width: 100px;
   height: 100px;
-  object-fit: cover; /* Garde le bon ratio et évite l'étirement */
-  border-radius: 50%; /* Rend l'image ronde */
-  border: 3px solid #42b883; /* Bordure verte */
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #42b883;
 }
 
 /* Boutons */
