@@ -14,7 +14,7 @@ export default defineComponent({
     const photo = ref<string | null>(null);
     const video = ref<HTMLVideoElement | null>(null);
 
-    const takePhotoAndNotify = () => {
+    const takePhotoAndNotify = async () => {
       const canvas = document.createElement('canvas');
       if (video.value) {
         canvas.width = video.value.videoWidth;
@@ -24,8 +24,7 @@ export default defineComponent({
           context.drawImage(video.value, 0, 0);
           photo.value = canvas.toDataURL('image/png');
           vibratePhone();
-          showNotification('Photo taken!');
-
+          await showNotification('Photo prise avec succès !');
         }
       }
     };
@@ -36,29 +35,43 @@ export default defineComponent({
       }
     };
 
-    const showNotification = (message: string) => {
-      if (Notification.permission === 'granted') {
-        new Notification(message);
-      } else if (Notification.permission !== 'denied') {
-        Notification.requestPermission().then((permission) => {
-          if (permission === 'granted') {
-            new Notification(message);
-          }
+    const showNotification = async (message: string) => {
+      if (!('serviceWorker' in navigator)) return;
+
+      const registration = await navigator.serviceWorker.getRegistration();
+      if (registration) {
+        registration.showNotification(message, {
+          body: 'Votre photo a été prise avec succès !',
+          icon: '/icon.png',
         });
+      }
+
+      // Gérer la vibration séparément
+      if ('vibrate' in navigator) {
+        navigator.vibrate([200, 100, 200]);
+      }
+    };
+
+
+    const requestNotificationPermission = async () => {
+      if (Notification.permission === 'default') {
+        await Notification.requestPermission();
       }
     };
 
     onMounted(() => {
+      requestNotificationPermission();
+
       navigator.mediaDevices
-        .getUserMedia({ video: true })
-        .then((stream) => {
-          if (video.value) {
-            video.value.srcObject = stream;
-          }
-        })
-        .catch((error) => {
-          console.error('Error accessing camera:', error);
-        });
+          .getUserMedia({ video: true })
+          .then((stream) => {
+            if (video.value) {
+              video.value.srcObject = stream;
+            }
+          })
+          .catch((error) => {
+            console.error('Error accessing camera:', error);
+          });
     });
 
     return { photo, video, takePhotoAndNotify };

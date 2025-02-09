@@ -24,13 +24,15 @@ import MyLocation from './components/MyLocation.vue';
 import MyCamera from './components/MyCamera.vue';
 import MyBattery from "./components/MyBattery.vue";
 import PhoneCall from "./components/PhoneCall.vue";
+import OtpCode from "./components/WebOTP.vue"
 
 // Liste des composants disponibles
 const components = {
   MyLocation,
   MyCamera,
   MyBattery,
-  PhoneCall
+  PhoneCall,
+  OtpCode,
 };
 
 // État pour suivre le composant actif
