@@ -29,10 +29,10 @@ export default defineComponent({
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors',
-      }).addTo(map.value as L.Map); // Add this type assertion
+      }).addTo(map.value as L.Map);
 
       L.marker([lat, lng])
-        .addTo(map.value as L.Map) // Add this type assertion
+        .addTo(map.value as L.Map)
         .bindPopup('You are here!')
         .openPopup();
     };

@@ -1,21 +1,27 @@
 <template>
-  <div class="header">
-    <h1>PWA de Vi</h1>
-    <img src="./assets/insta.png" alt="Photo de Victor" class="profile-image" />
+  <div class="container">
+    <header class="header">
+      <h1>PWA de Victor</h1>
+      <img src="./assets/insta.png" alt="Photo de Victor" class="profile-image" />
+    </header>
+
+    <h2>Choisissez une fonctionnalité :</h2>
+
+    <div class="button-container">
+      <button v-for="key in Object.keys(components)"
+              :key="key"
+              @click="activeComponent = key as keyof typeof components"
+              :class="{ active: activeComponent === key }">
+        {{ key }}
+      </button>
+    </div>
+
+    <div class="component-wrapper">
+      <component :is="activeComponent ? components[activeComponent] : null" />
+    </div>
+
+    <link rel="manifest" href="/manifest.json">
   </div>
-
-  <h1>Choisissez une fonctionnalité :</h1>
-
-  <div class="button-container">
-    <button v-for="key in Object.keys(components)" :key="key" @click="activeComponent = key as keyof typeof components">
-      {{ key }}
-    </button>
-  </div>
-
-  <!-- Affichage dynamique du composant sélectionné -->
-  <component :is="activeComponent ? components[activeComponent] : null" />
-
-  <link rel="manifest" href="/manifest.json">
 </template>
 
 <script setup lang="ts">
@@ -24,63 +30,129 @@ import MyLocation from './components/MyLocation.vue';
 import MyCamera from './components/MyCamera.vue';
 import MyBattery from "./components/MyBattery.vue";
 import PhoneCall from "./components/PhoneCall.vue";
-import OtpCode from "./components/WebOTP.vue"
+import MyChat from "./components/MyChat.vue";
 
-// Liste des composants disponibles
 const components = {
   MyLocation,
   MyCamera,
   MyBattery,
   PhoneCall,
-  OtpCode,
+  MyChat
 };
 
-// État pour suivre le composant actif
 const activeComponent = ref<keyof typeof components | null>(null);
 </script>
 
 <style scoped>
-/* En-tête */
-.header {
+/* Styles généraux */
+.container {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+  background: #1e1e1e;
+  color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   text-align: center;
+}
+
+/* Header */
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
   margin-bottom: 20px;
 }
 
-h1 {
-  font-size: 2em;
-  color: #f9f9f9;
-  margin-bottom: 10px;
-}
-
-
 .profile-image {
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   object-fit: cover;
   border-radius: 50%;
-  border: 3px solid #42b883;
+  border: 4px solid #42b883;
+  transition: transform 0.3s ease-in-out;
+}
+
+.profile-image:hover {
+  transform: scale(1.1);
+}
+
+/* Titre */
+h1 {
+  font-size: 2em;
+  margin-bottom: 5px;
+}
+
+h2 {
+  font-size: 1.5em;
+  font-weight: 300;
+  margin-bottom: 15px;
 }
 
 /* Boutons */
 .button-container {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   gap: 10px;
-  margin-bottom: 20px;
 }
 
 button {
-  padding: 10px 15px;
+  padding: 12px 18px;
   font-size: 1em;
   border: none;
-  background-color: #42b883;
+  background: #42b883;
   color: white;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: all 0.3s ease-in-out;
+  min-width: 120px;
 }
 
 button:hover {
-  background-color: #2c9c72;
+  background: #2c9c72;
+  transform: scale(1.05);
+}
+
+button.active {
+  background: #ffcc00;
+  color: #333;
+}
+
+/* Conteneur du composant actif */
+.component-wrapper {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #42b883;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .container {
+    max-width: 90%;
+    padding: 15px;
+  }
+
+  h1 {
+    font-size: 1.8em;
+  }
+
+  h2 {
+    font-size: 1.2em;
+  }
+
+  button {
+    font-size: 0.9em;
+    padding: 10px 15px;
+    min-width: 100px;
+  }
+
+  .profile-image {
+    width: 100px;
+    height: 100px;
+  }
 }
 </style>
