@@ -44,7 +44,7 @@ const activeComponent = ref<keyof typeof components | null>(null);
 </script>
 
 <style scoped>
-/* Styles généraux */
+
 .container {
   max-width: 600px;
   margin: auto;
@@ -56,7 +56,7 @@ const activeComponent = ref<keyof typeof components | null>(null);
   text-align: center;
 }
 
-/* Header */
+
 .header {
   display: flex;
   flex-direction: column;
@@ -78,7 +78,7 @@ const activeComponent = ref<keyof typeof components | null>(null);
   transform: scale(1.1);
 }
 
-/* Titre */
+
 h1 {
   font-size: 2em;
   margin-bottom: 5px;
@@ -90,7 +90,7 @@ h2 {
   margin-bottom: 15px;
 }
 
-/* Boutons */
+
 .button-container {
   display: flex;
   flex-wrap: wrap;
@@ -120,7 +120,6 @@ button.active {
   color: #333;
 }
 
-/* Conteneur du composant actif */
 .component-wrapper {
   margin-top: 20px;
   padding: 15px;
@@ -129,7 +128,6 @@ button.active {
   background: rgba(255, 255, 255, 0.05);
 }
 
-/* Responsive Design */
 @media (max-width: 480px) {
   .container {
     max-width: 90%;
