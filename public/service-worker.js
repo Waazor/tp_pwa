@@ -1,11 +1,11 @@
 self.addEventListener('install', (event) => {
     console.log('[Service Worker] Installation en cours...');
-    event.waitUntil(self.skipWaiting()); // Activation immédiate
+    event.waitUntil(self.skipWaiting());
 });
 
 self.addEventListener('activate', (event) => {
     console.log('[Service Worker] Activé');
-    event.waitUntil(self.clients.claim()); // Prise en charge immédiate des clients
+    event.waitUntil(self.clients.claim());
 });
 
 self.addEventListener('fetch', (event) => {

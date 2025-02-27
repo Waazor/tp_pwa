@@ -32,15 +32,12 @@ export default defineComponent({
       const context = canvas.getContext('2d');
       if (context) {
         context.drawImage(video.value, 0, 0);
-        photo.value = canvas.toDataURL('image/png'); // Convertir en base64
+        photo.value = canvas.toDataURL('image/png');
 
-        // Sauvegarde dans le Local Storage
         localStorage.setItem('capturedPhoto', photo.value);
 
         triggerFlash();
         vibratePhone();
-
-        // Attendre la fin du flash avant la notification
         setTimeout(showNotification, 300);
       }
     };
@@ -92,13 +89,11 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      // Récupérer la photo stockée
       const savedPhoto = localStorage.getItem('capturedPhoto');
       if (savedPhoto) {
         photo.value = savedPhoto;
       }
 
-      // Activation de la caméra
       navigator.mediaDevices
           .getUserMedia({ video: true })
           .then((stream) => {
