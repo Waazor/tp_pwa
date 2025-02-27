@@ -26,3 +26,7 @@ self.addEventListener('push', (event) => {
         self.registration.showNotification('Photo prise !', options)
     );
 });
+
+self.addEventListener('notificationclick', (event) => {
+    event.notification.close();
+});

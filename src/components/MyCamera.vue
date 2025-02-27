@@ -2,10 +2,11 @@
   <div class="container">
     <video ref="video" class="mirrored" autoplay></video>
 
-    <button @click="takePhotoAndNotify" class="capture-btn">📸 Prendre une photo</button>
+    <button @click="takePhoto" class="capture-btn">📸 Prendre une photo</button>
 
     <div v-if="photo" class="photo-container">
-      <img :src="photo" alt="Photo capturée" class="photo"/>
+      <img :src="photo" alt="Photo capturée" class="photo" />
+      <button @click="deletePhoto" class="delete-btn">🗑 Supprimer</button>
     </div>
 
     <div ref="flashOverlay" class="flash-overlay"></div>
@@ -21,7 +22,7 @@ export default defineComponent({
     const video = ref<HTMLVideoElement | null>(null);
     const flashOverlay = ref<HTMLDivElement | null>(null);
 
-    const takePhotoAndNotify = async () => {
+    const takePhoto = async () => {
       if (!video.value) return;
 
       const canvas = document.createElement('canvas');
@@ -31,31 +32,27 @@ export default defineComponent({
       const context = canvas.getContext('2d');
       if (context) {
         context.drawImage(video.value, 0, 0);
-        photo.value = canvas.toDataURL('image/png');
+        photo.value = canvas.toDataURL('image/png'); // Convertir en base64
+
+        // Sauvegarde dans le Local Storage
+        localStorage.setItem('capturedPhoto', photo.value);
+
         triggerFlash();
         vibratePhone();
-        await showNotification('📷 Photo prise avec succès !');
+
+        // Attendre la fin du flash avant la notification
+        setTimeout(showNotification, 300);
       }
+    };
+
+    const deletePhoto = () => {
+      photo.value = null;
+      localStorage.removeItem('capturedPhoto');
     };
 
     const vibratePhone = () => {
       if (navigator.vibrate) {
         navigator.vibrate([200, 100, 200]);
-      }
-    };
-
-    const showNotification = async (message: string) => {
-      if (Notification.permission === 'granted') {
-        new Notification(message, {
-          body: 'Votre photo a été capturée avec succès.',
-          icon: '/icon.png',
-        });
-      }
-    };
-
-    const requestNotificationPermission = async () => {
-      if (Notification.permission === 'default') {
-        await Notification.requestPermission();
       }
     };
 
@@ -71,9 +68,37 @@ export default defineComponent({
       }
     };
 
-    onMounted(() => {
-      requestNotificationPermission();
+    const showNotification = () => {
+      if (!("Notification" in window)) {
+        console.warn("Les notifications ne sont pas supportées par ce navigateur.");
+        return;
+      }
 
+      if (Notification.permission === "granted") {
+        new Notification("📷 Photo capturée !", {
+          body: "Votre photo a été enregistrée avec succès.",
+          icon: photo.value || undefined,
+        });
+      } else if (Notification.permission !== "denied") {
+        Notification.requestPermission().then((permission) => {
+          if (permission === "granted") {
+            new Notification("📷 Photo capturée !", {
+              body: "Votre photo a été enregistrée avec succès.",
+              icon: photo.value || undefined,
+            });
+          }
+        });
+      }
+    };
+
+    onMounted(() => {
+      // Récupérer la photo stockée
+      const savedPhoto = localStorage.getItem('capturedPhoto');
+      if (savedPhoto) {
+        photo.value = savedPhoto;
+      }
+
+      // Activation de la caméra
       navigator.mediaDevices
           .getUserMedia({ video: true })
           .then((stream) => {
@@ -87,7 +112,7 @@ export default defineComponent({
           });
     });
 
-    return { photo, video, takePhotoAndNotify, flashOverlay };
+    return { photo, video, takePhoto, deletePhoto, flashOverlay };
   },
 });
 </script>
@@ -142,6 +167,22 @@ video {
   width: 100%;
   border-radius: 8px;
   margin-top: 10px;
+}
+
+.delete-btn {
+  background: #ff4d4d;
+  color: white;
+  font-size: 14px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: 0.3s;
+}
+
+.delete-btn:hover {
+  background: #cc0000;
 }
 
 .flash-overlay {
